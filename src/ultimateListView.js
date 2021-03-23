@@ -1,5 +1,5 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component } from "react";
+import PropTypes from "prop-types";
 import {
   ActivityIndicator,
   Dimensions,
@@ -8,18 +8,17 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  View
-} from 'react-native'
-import RefreshableScrollView from './refreshableScrollView'
+  View,
+} from "react-native";
+import RefreshableScrollView from "./refreshableScrollView";
 
-
-const { width, height } = Dimensions.get('window')
+const { width, height } = Dimensions.get("window");
 const PaginationStatus = {
   firstLoad: 0,
   waiting: 1,
   allLoaded: 2,
-  fetching: 3
-}
+  fetching: 3,
+};
 
 export default class UltimateListView extends Component {
   static defaultProps = {
@@ -42,25 +41,25 @@ export default class UltimateListView extends Component {
 
     // Refreshable
     refreshable: true,
-    refreshableMode: 'basic', // basic or advanced
+    refreshableMode: "basic", // basic or advanced
 
     // RefreshControl
     refreshableTitle: null,
-    refreshableColors: ['dimgray', 'tomato', 'limegreen'],
-    refreshableProgressBackgroundColor: 'white',
+    refreshableColors: ["dimgray", "tomato", "limegreen"],
+    refreshableProgressBackgroundColor: "white",
     refreshableSize: undefined,
-    refreshableTintColor: 'lightgray',
+    refreshableTintColor: "lightgray",
     customRefreshControl: null,
 
     // Advanced RefreshView
-    refreshableTitlePull: 'Pull to refresh',
-    refreshableTitleRefreshing: 'Loading...',
-    refreshableTitleRelease: 'Release to load',
+    refreshableTitlePull: "Pull to refresh",
+    refreshableTitleRefreshing: "Loading...",
+    refreshableTitleRelease: "Release to load",
     customRefreshView: null,
     displayDate: false,
-    dateFormat: 'yyyy-MM-dd hh:mm',
-    dateTitle: 'Last updated: ',
-    arrowImageSource: require('./downArrow.png'),
+    dateFormat: "yyyy-MM-dd hh:mm",
+    dateTitle: "Last updated: ",
+    arrowImageSource: require("./downArrow.png"),
     arrowImageStyle: undefined,
     refreshViewStyle: undefined,
     dateStyle: undefined,
@@ -69,20 +68,20 @@ export default class UltimateListView extends Component {
     // Pagination
     pagination: true,
     autoPagination: true,
-    allLoadedText: 'End of List',
+    allLoadedText: "End of List",
 
     // Spinner
     spinnerColor: undefined,
-    fetchingSpinnerSize: 'large',
-    waitingSpinnerSize: 'small',
-    waitingSpinnerText: 'Loading...',
+    fetchingSpinnerSize: "large",
+    waitingSpinnerSize: "small",
+    waitingSpinnerText: "Loading...",
 
     // Pagination Button
-    paginationBtnText: 'Load more...',
+    paginationBtnText: "Load more...",
 
     // GridView
-    numColumns: 1
-  }
+    numColumns: 1,
+  };
 
   static propTypes = {
     initialNumToRender: PropTypes.number,
@@ -128,7 +127,6 @@ export default class UltimateListView extends Component {
     dateStyle: PropTypes.object,
     refreshViewHeight: PropTypes.number,
 
-
     // Pagination
     pagination: PropTypes.bool,
     autoPagination: PropTypes.bool,
@@ -144,276 +142,301 @@ export default class UltimateListView extends Component {
     paginationBtnText: PropTypes.string,
 
     // GridView
-    numColumns: PropTypes.number
-  }
+    numColumns: PropTypes.number,
+  };
 
   constructor(props) {
-    super(props)
-    this.setPage(1)
-    this.setRows([])
+    super(props);
+    this.setPage(1);
+    this.setRows([]);
 
     this.state = {
       dataSource: [],
       isRefreshing: false,
-      paginationStatus: PaginationStatus.firstLoad
-    }
+      paginationStatus: PaginationStatus.firstLoad,
+    };
   }
 
   componentDidMount() {
-    this.mounted = true
+    this.mounted = true;
     if (this.props.firstLoader) {
-      this.props.onFetch(this.getPage(), this.postRefresh, this.endFetch)
+      this.props.onFetch(this.getPage(), this.postRefresh, this.endFetch);
     }
   }
 
   componentWillUnmount() {
-    this.mounted = false
+    this.mounted = false;
   }
 
   onRefresh = () => {
-    console.log('onRefresh()')
+    console.log("onRefresh()");
     if (this.mounted) {
       this.setState({
-        isRefreshing: true
-      })
-      this.setPage(1)
-      this.props.onFetch(this.getPage(), this.postRefresh, this.endFetch)
+        isRefreshing: true,
+      });
+      this.setPage(1);
+      this.props.onFetch(this.getPage(), this.postRefresh, this.endFetch);
     }
-  }
+  };
 
   onPaginate = async () => {
-    if (this.state.paginationStatus !== PaginationStatus.allLoaded && !this.state.isRefreshing) {
-      console.log('onPaginate()')
-      await this.setState({ paginationStatus: PaginationStatus.fetching })
-      this.props.onFetch(this.getPage() + 1, this.postPaginate, this.endFetch)
+    if (
+      this.state.paginationStatus !== PaginationStatus.allLoaded &&
+      !this.state.isRefreshing
+    ) {
+      console.log("onPaginate()");
+      await this.setState({ paginationStatus: PaginationStatus.fetching });
+      this.props.onFetch(this.getPage() + 1, this.postPaginate, this.endFetch);
     }
-  }
+  };
 
   onEndReached = async () => {
     // console.log('onEndReached()');
-    if (this.props.pagination && this.props.autoPagination && this.state.paginationStatus === PaginationStatus.waiting) {
-      this.onPaginate()
+    if (
+      this.props.pagination &&
+      this.props.autoPagination &&
+      this.state.paginationStatus === PaginationStatus.waiting
+    ) {
+      this.onPaginate();
     }
-  }
+  };
 
-  setPage = page => this.page = page
+  setPage = (page) => (this.page = page);
 
-  getPage = () => this.page
+  getPage = () => this.page;
 
-  setRows = rows => this.rows = rows
+  setRows = (rows) => (this.rows = rows);
 
-  getRows = () => this.rows
+  getRows = () => this.rows;
 
-  sleep = time => new Promise(resolve => setTimeout(() => resolve(), time))
+  sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
 
   refresh = () => {
-    this.onRefresh()
-  }
+    this.onRefresh();
+  };
 
   scrollToOffset = (option) => {
-    this._flatList.scrollToOffset(option)
-  }
+    this._flatList.scrollToOffset(option);
+  };
 
   scrollToIndex = (option) => {
-    this._flatList.scrollToIndex(option)
-  }
+    this._flatList.scrollToIndex(option);
+  };
 
   scrollToItem = (option) => {
-    this._flatList.scrollToItem(option)
-  }
+    this._flatList.scrollToItem(option);
+  };
 
   scrollToEnd = (option) => {
-    this._flatList.scrollToEnd(option)
-  }
+    this._flatList.scrollToEnd(option);
+  };
 
   postRefresh = (rows = [], pageLimit) => {
     if (this.mounted) {
-      let paginationStatus = PaginationStatus.waiting
+      let paginationStatus = PaginationStatus.waiting;
       if (rows.length < pageLimit) {
-        paginationStatus = PaginationStatus.allLoaded
+        paginationStatus = PaginationStatus.allLoaded;
       }
-      this.updateRows(rows, paginationStatus)
+      this.updateRows(rows, paginationStatus);
     }
-  }
+  };
 
   endFetch = () => {
     // console.log('endRefresh()');
     if (this.mounted) {
-      this.setState({ isRefreshing: false, paginationStatus: PaginationStatus.allLoaded })
-      if (this.props.refreshableMode === 'advanced' && this._flatList._listRef._scrollRef.onRefreshEnd) {
-        this._flatList._listRef._scrollRef.onRefreshEnd()
+      this.setState({
+        isRefreshing: false,
+        paginationStatus: PaginationStatus.allLoaded,
+      });
+      if (
+        this.props.refreshableMode === "advanced" &&
+        this._flatList._listRef._scrollRef.onRefreshEnd
+      ) {
+        this._flatList._listRef._scrollRef.onRefreshEnd();
       }
     }
-  }
+  };
 
   postPaginate = (rows = [], pageLimit) => {
-    this.setPage(this.getPage() + 1)
-    let mergedRows
-    let paginationStatus
+    this.setPage(this.getPage() + 1);
+    let mergedRows;
+    let paginationStatus;
     if (rows.length === 0) {
-      paginationStatus = PaginationStatus.allLoaded
+      paginationStatus = PaginationStatus.allLoaded;
     } else {
-      mergedRows = this.getRows().concat(rows)
-      paginationStatus = PaginationStatus.waiting
+      mergedRows = this.getRows().concat(rows);
+      paginationStatus = PaginationStatus.waiting;
     }
 
-    this.updateRows(mergedRows, paginationStatus)
-  }
+    this.updateRows(mergedRows, paginationStatus);
+  };
 
   updateRows = (rows, paginationStatus) => {
     if (rows) {
-      this.setRows(rows)
+      this.setRows(rows);
       this.setState({
         dataSource: rows,
         isRefreshing: false,
-        paginationStatus
-      })
+        paginationStatus,
+      });
     } else {
       this.setState({
         dataSource: this.getRows().slice(),
         isRefreshing: false,
-        paginationStatus
-      })
+        paginationStatus,
+      });
     }
 
-    if (this.props.refreshableMode === 'advanced') {
-      this.endFetch()
+    if (this.props.refreshableMode === "advanced") {
+      this.endFetch();
     }
-  }
+  };
 
   updateDataSource(rows = []) {
-    this.setRows(rows)
+    this.setRows(rows);
     this.setState({
-      dataSource: rows
-    })
+      dataSource: rows,
+    });
   }
 
   paginationFetchingView = () => {
     if (this.props.paginationFetchingView) {
-      return this.props.paginationFetchingView()
+      return this.props.paginationFetchingView();
     }
 
     return (
       <View style={styles.fetchingView}>
-        <Text style={styles.paginationViewText}>{this.props.waitingSpinnerText}</Text>
+        <Text style={styles.paginationViewText}>
+          {this.props.waitingSpinnerText}
+        </Text>
       </View>
-    )
-  }
+    );
+  };
 
   paginationAllLoadedView = () => {
     if (this.props.pagination) {
       if (this.props.paginationAllLoadedView) {
-        return this.props.paginationAllLoadedView()
+        return this.props.paginationAllLoadedView();
       }
 
       return (
         <View style={styles.paginationView}>
-          <Text style={styles.allLoadedText}>
-            {this.props.allLoadedText}
-          </Text>
+          <Text style={styles.allLoadedText}>{this.props.allLoadedText}</Text>
         </View>
-      )
+      );
     }
 
-    return null
-  }
+    return null;
+  };
 
   paginationWaitingView = (paginateCallback) => {
     if (this.props.pagination) {
       if (this.props.autoPagination) {
         if (this.props.paginationWaitingView) {
-          return this.props.paginationWaitingView(paginateCallback)
+          return this.props.paginationWaitingView(paginateCallback);
         }
 
         return (
           <View style={styles.paginationView}>
-            <ActivityIndicator color={this.props.spinnerColor} size={this.props.waitingSpinnerSize} />
-            <Text
-              style={[styles.paginationViewText, { marginLeft: 5 }]}
-            >{this.props.waitingSpinnerText}
+            <ActivityIndicator
+              color={this.props.spinnerColor}
+              size={this.props.waitingSpinnerSize}
+            />
+            <Text style={[styles.paginationViewText, { marginLeft: 5 }]}>
+              {this.props.waitingSpinnerText}
             </Text>
           </View>
-        )
+        );
       }
     }
 
-    return null
-  }
+    return null;
+  };
 
   renderHeader = () => {
     if (this.props.header) {
-      return this.props.header()
+      return this.props.header();
     }
 
-    return null
-  }
+    return null;
+  };
 
   renderItem = ({ item, index, separators }) => {
     if (this.props.item) {
-      return this.props.item(item, index, separators)
+      return this.props.item(item, index, separators);
     }
 
-    return null
-  }
+    return null;
+  };
 
   renderSeparator = () => {
     if (this.props.separator) {
       if (this.props.numColumns > 1) {
-        return null
+        return null;
       }
 
-      return this.props.separator()
+      return this.props.separator();
     }
 
-    return null
-  }
+    return null;
+  };
 
   renderEmptyView = () => {
-    if (this.state.paginationStatus !== PaginationStatus.firstLoad && this.props.emptyView) {
-      return this.props.emptyView()
+    if (
+      this.state.paginationStatus !== PaginationStatus.firstLoad &&
+      this.props.emptyView
+    ) {
+      return this.props.emptyView();
     }
 
-    return null
-  }
+    return null;
+  };
 
   renderFooter = () => {
     if (this.state.paginationStatus === PaginationStatus.firstLoad) {
-      return this.paginationFetchingView()
-    } else if (this.state.paginationStatus === PaginationStatus.fetching && this.props.autoPagination === false) {
-      return this.paginationWaitingView(this.onPaginate)
-    } else if (this.state.paginationStatus === PaginationStatus.fetching && this.props.autoPagination === true) {
-      return this.paginationWaitingView()
-    } else if (this.getRows().length !== 0 && this.state.paginationStatus === PaginationStatus.allLoaded) {
-      return this.paginationAllLoadedView()
+      return this.paginationFetchingView();
+    } else if (
+      this.state.paginationStatus === PaginationStatus.fetching &&
+      this.props.autoPagination === false
+    ) {
+      return this.paginationWaitingView(this.onPaginate);
+    } else if (
+      this.state.paginationStatus === PaginationStatus.fetching &&
+      this.props.autoPagination === true
+    ) {
+      return this.paginationWaitingView();
+    } else if (
+      this.getRows().length !== 0 &&
+      this.state.paginationStatus === PaginationStatus.allLoaded
+    ) {
+      return this.paginationAllLoadedView();
     }
 
-    return null
-  }
+    return null;
+  };
 
   renderScrollComponent = (props) => {
-    if (this.props.refreshable && this.props.refreshableMode === 'advanced') {
+    if (this.props.refreshable && this.props.refreshableMode === "advanced") {
       return (
         <RefreshableScrollView
           {...props}
           insideOfUltimateListView
           onRefresh={this.onRefresh}
-          ref={ref => this.scrollView = ref}
+          ref={(ref) => (this.scrollView = ref)}
         />
-      )
+      );
     }
 
-    return (
-      <ScrollView
-        {...props}
-        ref={ref => this.scrollView = ref}
-      />
-    )
-  }
+    return <ScrollView {...props} ref={(ref) => (this.scrollView = ref)} />;
+  };
 
   renderRefreshControl = () => {
-    if (this.props.refreshable && this.props.refreshableMode === 'basic') {
+    if (this.props.refreshable && this.props.refreshableMode === "basic") {
       if (this.props.customRefreshControl) {
-        return this.props.customRefreshControl(this.state.isRefreshing, this.onRefresh)
+        return this.props.customRefreshControl(
+          this.state.isRefreshing,
+          this.onRefresh
+        );
       }
 
       return (
@@ -421,26 +444,28 @@ export default class UltimateListView extends Component {
           onRefresh={this.onRefresh}
           refreshing={this.state.isRefreshing}
           colors={this.props.refreshableColors}
-          progressBackgroundColor={this.props.refreshableProgressBackgroundColor}
+          progressBackgroundColor={
+            this.props.refreshableProgressBackgroundColor
+          }
           size={this.props.refreshableSize}
           tintColor={this.props.refreshableTintColor}
           title={this.props.refreshableTitle}
         />
-      )
+      );
     }
 
-    return null
-  }
+    return null;
+  };
 
   render() {
-    const { numColumns } = this.props
+    const { numColumns } = this.props;
     return (
       <FlatList
         renderScrollComponent={this.renderScrollComponent}
         key={numColumns}
         onEndReachedThreshold={0.1}
         {...this.props}
-        ref={ref => this._flatList = ref}
+        ref={(ref) => (this._flatList = ref)}
         data={this.state.dataSource}
         renderItem={this.renderItem}
         ItemSeparatorComponent={this.renderSeparator}
@@ -451,7 +476,7 @@ export default class UltimateListView extends Component {
         refreshControl={this.renderRefreshControl()}
         numColumns={numColumns}
       />
-    )
+    );
   }
 }
 
@@ -459,60 +484,60 @@ const styles = StyleSheet.create({
   fetchingView: {
     width,
     height,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   paginationView: {
     flex: 0,
     width,
     height: 55,
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center'
+    flexDirection: "row",
+    justifyContent: "center",
+    alignItems: "center",
   },
   paginationViewText: {
-    fontSize: 16
+    fontSize: 16,
   },
   paginationViewSpinner: {
-    marginRight: 5
+    marginRight: 5,
   },
   paginationBtn: {
-    backgroundColor: 'tomato',
+    backgroundColor: "tomato",
     margin: 10,
     borderRadius: 20,
     flex: 1,
     height: 50,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   paginationBtnText: {
     fontSize: 16,
-    color: 'white',
-    fontWeight: 'bold'
+    color: "white",
+    fontWeight: "bold",
   },
   separator: {
     height: 0.5,
     marginLeft: 15,
     marginRight: 15,
-    backgroundColor: 'lightgray'
+    backgroundColor: "lightgray",
   },
   emptyView: {
     flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center",
   },
   allLoadedText: {
-    alignSelf: 'center',
-    color: '#bfbfbf'
+    alignSelf: "center",
+    color: "#bfbfbf",
   },
   gridItem: {
-    overflow: 'hidden',
-    alignItems: 'center',
-    justifyContent: 'center'
+    overflow: "hidden",
+    alignItems: "center",
+    justifyContent: "center",
   },
   gridView: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    flexWrap: 'wrap'
-  }
-})
+    flexDirection: "row",
+    alignItems: "flex-start",
+    flexWrap: "wrap",
+  },
+});

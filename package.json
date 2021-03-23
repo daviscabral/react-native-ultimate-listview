@@ -1,6 +1,6 @@
 {
-  "name": "@bang88/react-native-ultimate-listview",
-  "version": "3.3.4",
+  "name": "@daviscabral/react-native-ultimate-listview",
+  "version": "3.3.5",
   "description": "A high performance FlatList providing customised pull-to-refresh | auto-pagination & infinite-scrolling | gridview layout | swipeable-row. The truly ultimate version that I have done the most tricky part for you, just simply follow the instructions shown below to put it in your app.",
   "main": "index.js",
   "scripts": {
@@ -50,8 +50,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gameboyVito/react-native-ultimate-listview.git"
+    "url": "git+https://github.com/daviscabral/react-native-ultimate-listview.git"
   },
-  "homepage": "https://github.com/gameboyVito/react-native-ultimate-listview#readme",
-  "license": "MIT"
+  "homepage": "https://github.com/daviscabral/react-native-ultimate-listview#readme",
+  "license": "MIT",
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.14.1"
+  }
 }

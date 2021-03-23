@@ -1,7 +1,5 @@
 {
-  "extends": [
-    "airbnb"
-  ],
+  "extends": ["airbnb"],
   "parser": "babel-eslint",
   "settings": {
     "import/resolver": {
@@ -16,9 +14,9 @@
     "__DEV__": true
   },
   "rules": {
-    "no-unused-expressions": [2, {"allowTernary": true}],
-    "comma-dangle": [2, "never"],
-    "semi": [2, "never"],
+    "no-unused-expressions": [2, { "allowTernary": true }],
+    "semi": "error",
+    "quotes": ["error", "double"],
     "no-await-in-loop": 0,
     "react/no-unused-state": 0,
     "react/forbid-prop-types": 0,
@@ -39,12 +37,18 @@
     "react/prop-types": 0,
     "no-unused-vars": 0,
     "import/no-extraneous-dependencies": 0,
-    "no-restricted-syntax": [0, {
-      "selector": "ForOfStatement"
-    }],
-    "no-restricted-properties": [0, {
-      "object": "Math",
-      "property": "pow"
-    }]
+    "no-restricted-syntax": [
+      0,
+      {
+        "selector": "ForOfStatement"
+      }
+    ],
+    "no-restricted-properties": [
+      0,
+      {
+        "object": "Math",
+        "property": "pow"
+      }
+    ]
   }
 }

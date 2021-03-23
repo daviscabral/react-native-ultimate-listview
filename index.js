@@ -1,4 +1,4 @@
-import UltimateListView from './src/ultimateListView'
-import UltimateRefreshView from './src/refreshableScrollView'
+import UltimateListView from "./src/ultimateListView";
+import UltimateRefreshView from "./src/refreshableScrollView";
 
-export { UltimateListView, UltimateRefreshView }
+export { UltimateListView, UltimateRefreshView };
